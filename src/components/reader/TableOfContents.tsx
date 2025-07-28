@@ -69,71 +69,54 @@ export default function TableOfContents({
         <ScrollArea className="h-full mt-6">
           <div className="space-y-2">
             {book.chapters.map((chapter) => (
-              <div key={chapter.id} className="space-y-2">
-                <div className="border rounded-lg p-3 space-y-2">
-                  <Button
-                    variant={currentPage >= chapter.startPage && currentPage <= chapter.endPage ? "secondary" : "ghost"}
-                    className="w-full justify-start text-left h-auto p-3"
-                    onClick={() => handlePageSelect(chapter.startPage)}
-                  >
-                    <div className="flex-1">
-                      <div className="flex items-center justify-between">
+              <div key={chapter.id} className="space-y-1">
+                <div className="border rounded-lg p-3">
+                  <div className="flex items-center justify-between mb-2">
+                    <Button
+                      variant={currentPage >= chapter.startPage && currentPage <= chapter.endPage ? "secondary" : "ghost"}
+                      className="flex-1 justify-start text-left h-auto p-2 mr-2"
+                      onClick={() => handlePageSelect(chapter.startPage)}
+                    >
+                      <div className="flex-1">
                         <h4 className="font-medium text-sm leading-tight">
                           {chapter.title}
                         </h4>
-                        <Badge variant="outline" className="text-xs ml-2">
-                          p. {chapter.startPage}
-                        </Badge>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          Pages {chapter.startPage} - {chapter.endPage}
+                        </p>
                       </div>
-                      <p className="text-xs text-muted-foreground mt-1">
-                        Pages {chapter.startPage} - {chapter.endPage}
-                      </p>
-                    </div>
-                  </Button>
-                  
-                  {onStudyChapter && (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="w-full"
-                      onClick={() => handleStudyChapter(chapter)}
-                    >
-                      <Brain className="h-3 w-3 mr-2" />
-                      Study This Chapter
                     </Button>
-                  )}
-                
+                    
+                    {onStudyChapter && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="p-2 hover:bg-primary/10 group"
+                        onClick={() => handleStudyChapter(chapter)}
+                      >
+                        <Brain className="h-4 w-4 text-primary animate-pulse group-hover:scale-110 transition-transform duration-200" />
+                      </Button>
+                    )}
+                  </div>
+                  
                   {/* Sections */}
                   <div className="ml-4 space-y-1">
                     {chapter.sections.map((section) => (
-                      <div key={section.id} className="space-y-1">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="w-full justify-start text-left h-auto p-2 text-muted-foreground hover:text-foreground"
-                          onClick={() => handlePageSelect(section.startPage)}
-                        >
-                          <ChevronRight className="h-3 w-3 mr-2 opacity-50" />
-                          <div className="flex-1">
-                            <span className="text-xs">{section.title}</span>
-                            <span className="text-xs text-muted-foreground ml-2">
-                              p. {section.startPage}
-                            </span>
-                          </div>
-                        </Button>
-                        
-                        {onStudySection && (
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="w-full ml-6 text-xs text-muted-foreground hover:text-foreground"
-                            onClick={() => handleStudySection(section, chapter)}
-                          >
-                            <Brain className="h-3 w-3 mr-2" />
-                            Study Section
-                          </Button>
-                        )}
-                      </div>
+                      <Button
+                        key={section.id}
+                        variant="ghost"
+                        size="sm"
+                        className="w-full justify-start text-left h-auto p-2 text-muted-foreground hover:text-foreground"
+                        onClick={() => handlePageSelect(section.startPage)}
+                      >
+                        <ChevronRight className="h-3 w-3 mr-2 opacity-50" />
+                        <div className="flex-1 flex items-center justify-between">
+                          <span className="text-xs">{section.title}</span>
+                          <Badge variant="outline" className="text-xs ml-2">
+                            p. {section.startPage}
+                          </Badge>
+                        </div>
+                      </Button>
                     ))}
                   </div>
                 </div>
