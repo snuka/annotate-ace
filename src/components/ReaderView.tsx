@@ -187,7 +187,7 @@ export default function ReaderView({ book, onBack }: ReaderViewProps) {
             settings.pageLayout === 'spread' && rightPageContent ? 'grid-cols-2' : 'grid-cols-1'
           }`}>
             {/* Left/Single Page */}
-            <Card className="bg-reader-page border-border/50 shadow-lg flex flex-col relative" style={{ height: 'calc(100vh - 72px)' }}>
+            <Card className="bg-reader-page border-border/50 shadow-lg flex flex-col relative" style={{ height: 'calc(100vh - 48px)' }}>
               <div 
                 ref={pageContentRef}
                 className="flex-1 p-8 reader-text overflow-y-auto"
@@ -207,7 +207,7 @@ export default function ReaderView({ book, onBack }: ReaderViewProps) {
 
             {/* Right Page (if spread layout) */}
             {settings.pageLayout === 'spread' && rightPageContent && (
-              <Card className="bg-reader-page border-border/50 shadow-lg flex flex-col relative" style={{ height: 'calc(100vh - 72px)' }}>
+              <Card className="bg-reader-page border-border/50 shadow-lg flex flex-col relative" style={{ height: 'calc(100vh - 48px)' }}>
                 <div 
                   className="flex-1 p-8 reader-text overflow-y-auto"
                   style={{
