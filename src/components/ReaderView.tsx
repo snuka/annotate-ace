@@ -201,7 +201,7 @@ export default function ReaderView({ book, onBack }: ReaderViewProps) {
                   __html: leftPageContent ? getHighlightedContent(leftPageContent, leftPageNumber) : '<p>Page not found</p>'
                 }}
               />
-              <div className="absolute bottom-4 right-4 bg-card/90 backdrop-blur text-sm text-muted-foreground px-2 py-1 rounded shadow-sm">
+              <div className="absolute bottom-4 right-4 text-sm text-muted-foreground px-2 py-1">
                 {leftPageNumber}
               </div>
             </Card>
@@ -221,7 +221,7 @@ export default function ReaderView({ book, onBack }: ReaderViewProps) {
                     __html: getHighlightedContent(rightPageContent, rightPageNumber!)
                   }}
                 />
-                <div className="absolute bottom-4 right-4 bg-card/90 backdrop-blur text-sm text-muted-foreground px-2 py-1 rounded shadow-sm">
+                <div className="absolute bottom-4 right-4 text-sm text-muted-foreground px-2 py-1">
                   {rightPageNumber}
                 </div>
               </Card>
