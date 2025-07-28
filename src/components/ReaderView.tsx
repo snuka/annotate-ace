@@ -68,14 +68,30 @@ export default function ReaderView({ book, onBack }: ReaderViewProps) {
       }
     };
 
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
+        return; // Don't interfere with input fields
+      }
+      
+      if (e.key === 'ArrowLeft' && currentPage > 1) {
+        e.preventDefault();
+        prevPage();
+      } else if (e.key === 'ArrowRight' && currentPage < book.metadata.totalPages) {
+        e.preventDefault();
+        nextPage();
+      }
+    };
+
     document.addEventListener('mouseup', handleSelection);
     document.addEventListener('keyup', handleSelection);
+    document.addEventListener('keydown', handleKeyDown);
 
     return () => {
       document.removeEventListener('mouseup', handleSelection);
       document.removeEventListener('keyup', handleSelection);
+      document.removeEventListener('keydown', handleKeyDown);
     };
-  }, []);
+  }, [currentPage, book.metadata.totalPages]);
 
   const goToPage = (pageNumber: number) => {
     if (pageNumber >= 1 && pageNumber <= book.metadata.totalPages) {
@@ -185,8 +201,10 @@ export default function ReaderView({ book, onBack }: ReaderViewProps) {
                   __html: leftPageContent ? getHighlightedContent(leftPageContent, leftPageNumber) : '<p>Page not found</p>'
                 }}
               />
-              <div className="px-8 py-4 text-center text-sm text-muted-foreground border-t bg-card/50">
-                Page {leftPageNumber}
+              <div className="relative">
+                <div className="absolute bottom-4 right-4 bg-card/90 backdrop-blur text-sm text-muted-foreground px-2 py-1 rounded shadow-sm">
+                  {leftPageNumber}
+                </div>
               </div>
             </Card>
 
@@ -205,53 +223,13 @@ export default function ReaderView({ book, onBack }: ReaderViewProps) {
                     __html: getHighlightedContent(rightPageContent, rightPageNumber!)
                   }}
                 />
-                <div className="px-8 py-4 text-center text-sm text-muted-foreground border-t bg-card/50">
-                  Page {rightPageNumber}
+                <div className="relative">
+                  <div className="absolute bottom-4 right-4 bg-card/90 backdrop-blur text-sm text-muted-foreground px-2 py-1 rounded shadow-sm">
+                    {rightPageNumber}
+                  </div>
                 </div>
               </Card>
             )}
-          </div>
-        </div>
-
-        {/* Auto-hiding Bottom Navigation */}
-        <div className="group relative">
-          {/* Hover trigger area */}
-          <div className="absolute bottom-0 left-0 right-0 h-16 z-30"></div>
-          
-          <div className="absolute bottom-0 left-0 right-0 px-6 py-4 bg-card/95 backdrop-blur border-t transform translate-y-full transition-transform duration-300 ease-out group-hover:translate-y-0 z-40">
-            <div className="flex items-center justify-between">
-              <Button 
-                variant="outline" 
-                onClick={prevPage}
-                disabled={currentPage <= 1}
-                className="flex items-center gap-2"
-              >
-                <ChevronLeft className="h-4 w-4" />
-                Previous
-              </Button>
-              
-              <div className="flex items-center gap-4">
-                <span className="text-sm text-muted-foreground">
-                  {currentPage} of {book.metadata.totalPages}
-                </span>
-                <div className="w-48 bg-muted rounded-full h-2">
-                  <div 
-                    className="bg-primary h-2 rounded-full transition-all duration-300"
-                    style={{ width: `${(currentPage / book.metadata.totalPages) * 100}%` }}
-                  />
-                </div>
-              </div>
-
-              <Button 
-                variant="outline" 
-                onClick={nextPage}
-                disabled={currentPage >= book.metadata.totalPages}
-                className="flex items-center gap-2"
-              >
-                Next
-                <ChevronRight className="h-4 w-4" />
-              </Button>
-            </div>
           </div>
         </div>
       </div>
