@@ -71,7 +71,6 @@ export interface ReadingSettings {
   lineHeight: number;
   theme: 'light' | 'dark' | 'sepia';
   pageLayout: 'single' | 'spread';
-  fullscreen: boolean;
 }
 
 export interface StudySession {

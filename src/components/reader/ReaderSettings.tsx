@@ -5,7 +5,7 @@ import { Slider } from '@/components/ui/slider';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Switch } from '@/components/ui/switch';
 import { Separator } from '@/components/ui/separator';
-import { Settings, Type, Palette, Layout, Monitor } from 'lucide-react';
+import { Settings, Type, Palette, Layout } from 'lucide-react';
 import { ReadingSettings } from '@/types/textbook';
 
 interface ReaderSettingsProps {
@@ -151,25 +151,6 @@ export default function ReaderSettings({
 
           <Separator />
 
-          {/* Display */}
-          <div className="space-y-4">
-            <div className="flex items-center gap-2">
-              <Monitor className="h-4 w-4" />
-              <h3 className="font-medium">Display</h3>
-            </div>
-            
-            <div className="flex items-center justify-between">
-              <Label htmlFor="fullscreen">Fullscreen Mode</Label>
-              <Switch 
-                id="fullscreen"
-                checked={settings.fullscreen}
-                onCheckedChange={(checked) => updateSetting('fullscreen', checked)}
-              />
-            </div>
-          </div>
-
-          <Separator />
-
           {/* Reset to Defaults */}
           <Button 
             variant="outline" 
@@ -179,8 +160,7 @@ export default function ReaderSettings({
               fontFamily: 'serif',
               lineHeight: 1.6,
               theme: 'light',
-              pageLayout: 'spread',
-              fullscreen: false
+              pageLayout: 'spread'
             })}
           >
             Reset to Defaults

@@ -44,8 +44,7 @@ export default function ReaderView({ book, onBack }: ReaderViewProps) {
     fontFamily: 'serif',
     lineHeight: 1.6,
     theme: 'light',
-    pageLayout: 'spread',
-    fullscreen: false
+    pageLayout: 'spread'
   });
 
   const leftPageNumber = settings.pageLayout === 'spread' && currentPage % 2 === 0 ? currentPage - 1 : currentPage;
@@ -69,22 +68,14 @@ export default function ReaderView({ book, onBack }: ReaderViewProps) {
       }
     };
 
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && settings.fullscreen) {
-        setSettings(prev => ({ ...prev, fullscreen: false }));
-      }
-    };
-
     document.addEventListener('mouseup', handleSelection);
     document.addEventListener('keyup', handleSelection);
-    document.addEventListener('keydown', handleKeyDown);
 
     return () => {
       document.removeEventListener('mouseup', handleSelection);
       document.removeEventListener('keyup', handleSelection);
-      document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [settings.fullscreen]);
+  }, []);
 
   const goToPage = (pageNumber: number) => {
     if (pageNumber >= 1 && pageNumber <= book.metadata.totalPages) {
@@ -133,24 +124,10 @@ export default function ReaderView({ book, onBack }: ReaderViewProps) {
   return (
     <div className={`min-h-screen bg-reader-page transition-all duration-300 ${
       settings.theme === 'dark' ? 'dark' : settings.theme === 'sepia' ? 'sepia' : ''
-    } ${settings.fullscreen ? 'fixed inset-0 z-50' : ''}`}>
-      
-      {/* Fullscreen Exit Button */}
-      {settings.fullscreen && (
-        <Button 
-          variant="ghost" 
-          size="sm"
-          className="fixed top-4 right-4 z-50 bg-card/80 backdrop-blur hover:bg-card"
-          onClick={() => setSettings(prev => ({ ...prev, fullscreen: false }))}
-        >
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          Exit Fullscreen
-        </Button>
-      )}
+    }`}>
       
       {/* Header */}
-      {!settings.fullscreen && (
-        <header className="bg-card/80 backdrop-blur border-b px-4 py-3">
+      <header className="bg-card/80 backdrop-blur border-b px-4 py-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <Button variant="ghost" size="sm" onClick={onBack}>
@@ -179,7 +156,6 @@ export default function ReaderView({ book, onBack }: ReaderViewProps) {
             </div>
           </div>
         </header>
-      )}
 
       {/* Reader Content */}
       <div className="flex-1 relative">
