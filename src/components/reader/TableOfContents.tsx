@@ -109,7 +109,6 @@ export default function TableOfContents({
                         className="w-full justify-start text-left h-auto p-2 text-muted-foreground hover:text-foreground"
                         onClick={() => handlePageSelect(section.startPage)}
                       >
-                        <ChevronRight className="h-3 w-3 mr-2 opacity-50" />
                         <div className="flex-1 flex items-center justify-between">
                           <span className="text-xs">{section.title}</span>
                           <Badge variant="outline" className="text-xs ml-2">
