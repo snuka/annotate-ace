@@ -75,11 +75,11 @@ export default function AnnotationTools({
       {/* Selected text highlight overlay */}
       <style>{`
         ::selection {
-          background-color: hsl(var(--highlight-yellow)) !important;
+          background-color: hsl(var(--highlight-${selectedColor})) !important;
           color: hsl(var(--foreground)) !important;
         }
         ::-moz-selection {
-          background-color: hsl(var(--highlight-yellow)) !important;
+          background-color: hsl(var(--highlight-${selectedColor})) !important;
           color: hsl(var(--foreground)) !important;
         }
       `}</style>
