@@ -106,14 +106,16 @@ export default function Library({ onOpenBook }: LibraryProps) {
             >
               {viewMode === 'grid' ? (
                 <>
-                  <div className="relative overflow-hidden rounded-t-lg bg-gradient-to-br from-primary/10 to-accent/10 p-8">
-                    <div className="text-center">
-                      <BookOpen className="mx-auto h-16 w-16 text-primary/60 mb-3" />
-                      <div className="absolute top-3 right-3">
-                        <Badge variant="secondary" className="text-xs">
-                          {book.metadata.totalPages} pages
-                        </Badge>
-                      </div>
+                  <div className="relative overflow-hidden rounded-t-lg">
+                    <img 
+                      src={book.metadata.coverImage} 
+                      alt={`Cover of ${book.metadata.title}`}
+                      className="w-full h-48 object-cover"
+                    />
+                    <div className="absolute top-3 right-3">
+                      <Badge variant="secondary" className="text-xs">
+                        {book.metadata.totalPages} pages
+                      </Badge>
                     </div>
                   </div>
                   <CardHeader className="pb-2">
@@ -138,8 +140,12 @@ export default function Library({ onOpenBook }: LibraryProps) {
                 </>
               ) : (
                 <>
-                  <div className="w-24 bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center">
-                    <BookOpen className="h-8 w-8 text-primary/60" />
+                  <div className="w-24 overflow-hidden">
+                    <img 
+                      src={book.metadata.coverImage} 
+                      alt={`Cover of ${book.metadata.title}`}
+                      className="w-full h-full object-cover"
+                    />
                   </div>
                   <div className="flex-1">
                     <CardHeader className="pb-2">
