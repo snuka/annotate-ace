@@ -277,6 +277,7 @@ export default function ReaderView({ book, onBack }: ReaderViewProps) {
       />
 
       <AnnotationSearch
+        book={book}
         annotations={annotations}
         isOpen={showAnnotationSearch}
         onClose={() => setShowAnnotationSearch(false)}
