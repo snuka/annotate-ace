@@ -11,7 +11,8 @@ import {
   Bookmark, 
   HighlighterIcon,
   StickyNote,
-  Menu
+  Menu,
+  Brain
 } from 'lucide-react';
 import { Textbook } from '@/types/textbook';
 import { getPageContent, getChapterByPage } from '@/data/dummyTextbooks';
@@ -19,7 +20,10 @@ import TableOfContents from './reader/TableOfContents';
 import ReaderSettings from './reader/ReaderSettings';
 import AnnotationTools from './reader/AnnotationTools';
 import AnnotationSearch from './reader/AnnotationSearch';
+import { StudyAssistant } from './study-assistant/StudyAssistant';
+import { useStudyAssistant } from '@/hooks/useStudyAssistant';
 import { ReadingSettings, Annotation } from '@/types/textbook';
+import { StudyContext } from '@/types/studyAssistant';
 
 interface ReaderViewProps {
   book: Textbook;
@@ -36,6 +40,9 @@ export default function ReaderView({ book, onBack }: ReaderViewProps) {
   const [selectionRange, setSelectionRange] = useState<Range | null>(null);
   const [focusMode, setFocusMode] = useState(false);
   const [annotations, setAnnotations] = useState<Annotation[]>([]);
+  
+  // Study Assistant
+  const studyAssistant = useStudyAssistant();
 
   const pageContentRef = useRef<HTMLDivElement>(null);
 
@@ -122,6 +129,23 @@ export default function ReaderView({ book, onBack }: ReaderViewProps) {
     setSelectionRange(null);
   };
 
+  const handleStudySelection = () => {
+    if (selectedText) {
+      const context: StudyContext = {
+        type: 'text',
+        content: leftPageContent || '',
+        textbookId: book.metadata.id,
+        pageNumber: currentPage,
+        chapterId: currentChapter?.id,
+        selectedText: selectedText
+      };
+      studyAssistant.openWithContext(context);
+      setShowAnnotationTools(false);
+      setSelectedText('');
+      setSelectionRange(null);
+    }
+  };
+
   const getHighlightedContent = (content: string, pageNum: number) => {
     let highlightedContent = content;
     const pageAnnotations = annotations.filter(ann => ann.pageNumber === pageNum && ann.type === 'highlight');
@@ -166,6 +190,22 @@ export default function ReaderView({ book, onBack }: ReaderViewProps) {
               </Button>
               <Button variant="ghost" size="sm" onClick={() => setShowTOC(true)}>
                 <Menu className="h-4 w-4" />
+              </Button>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={() => {
+                  const context: StudyContext = {
+                    type: 'page',
+                    content: leftPageContent || '',
+                    textbookId: book.metadata.id,
+                    pageNumber: currentPage,
+                    chapterId: currentChapter?.id
+                  };
+                  studyAssistant.openWithContext(context);
+                }}
+              >
+                <Brain className="h-4 w-4" />
               </Button>
               <Button variant="ghost" size="sm" onClick={() => setShowSettings(true)}>
                 <Settings className="h-4 w-4" />
@@ -279,6 +319,7 @@ export default function ReaderView({ book, onBack }: ReaderViewProps) {
           textbookId={book.metadata.id}
           pageNumber={currentPage}
           onAnnotate={handleAnnotation}
+          onStudy={handleStudySelection}
           onClose={() => setShowAnnotationTools(false)}
         />
       )}
@@ -314,6 +355,9 @@ export default function ReaderView({ book, onBack }: ReaderViewProps) {
           setShowAnnotationSearch(false);
         }}
       />
+
+      {/* Study Assistant */}
+      <StudyAssistant onNavigateToPage={goToPage} />
     </div>
   );
 }

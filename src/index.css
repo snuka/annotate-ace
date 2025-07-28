@@ -169,6 +169,13 @@
   .highlight-pink { background-color: hsl(var(--highlight-pink)); }
   .highlight-orange { background-color: hsl(var(--highlight-orange)); }
 
+  /* Background utilities for annotation tools */
+  .bg-highlight-yellow { background-color: hsl(var(--highlight-yellow)); }
+  .bg-highlight-green { background-color: hsl(var(--highlight-green)); }
+  .bg-highlight-blue { background-color: hsl(var(--highlight-blue)); }
+  .bg-highlight-pink { background-color: hsl(var(--highlight-pink)); }
+  .bg-highlight-orange { background-color: hsl(var(--highlight-orange)); }
+
   /* Focus mode overlay */
   .focus-overlay {
     background: hsl(var(--focus-overlay));

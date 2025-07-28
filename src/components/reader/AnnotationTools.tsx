@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { X, HighlighterIcon, StickyNote, Quote, Target } from 'lucide-react';
+import { X, HighlighterIcon, StickyNote, Quote, Target, Brain } from 'lucide-react';
 import { Annotation } from '@/types/textbook';
 
 interface AnnotationToolsProps {
@@ -14,6 +14,7 @@ interface AnnotationToolsProps {
   onClose: () => void;
   onCreateCitation?: () => void;
   onCreateFlashcard?: () => void;
+  onStudy?: () => void;
 }
 
 const highlightColors: Array<{ color: Annotation['color']; label: string; className: string }> = [
@@ -31,7 +32,8 @@ export default function AnnotationTools({
   onAnnotate,
   onClose,
   onCreateCitation,
-  onCreateFlashcard
+  onCreateFlashcard,
+  onStudy
 }: AnnotationToolsProps) {
   const [mode, setMode] = useState<'highlight' | 'note'>('highlight');
   const [selectedColor, setSelectedColor] = useState<Annotation['color']>('yellow');
@@ -164,6 +166,12 @@ export default function AnnotationTools({
 
           {/* Quick Actions */}
           <div className="flex gap-2 justify-center">
+            {onStudy && (
+              <Button variant="outline" size="sm" onClick={onStudy} className="flex items-center gap-2">
+                <Brain className="h-3 w-3" />
+                Study
+              </Button>
+            )}
             {onCreateCitation && (
               <Button variant="outline" size="sm" onClick={onCreateCitation} className="flex items-center gap-2">
                 <Quote className="h-3 w-3" />
