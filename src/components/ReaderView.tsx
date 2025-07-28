@@ -122,12 +122,13 @@ export default function ReaderView({ book, onBack }: ReaderViewProps) {
   };
 
   return (
-    <div className={`min-h-screen bg-reader-page transition-all duration-300 ${
+    <div className={`h-screen bg-reader-page transition-all duration-300 flex flex-col ${
       settings.theme === 'dark' ? 'dark' : settings.theme === 'sepia' ? 'sepia' : ''
     }`}>
       
-      {/* Header */}
-      <header className="bg-card/80 backdrop-blur border-b px-4 py-3">
+      {/* Auto-hiding Header */}
+      <div className="group relative">
+        <header className="absolute top-0 left-0 right-0 bg-card/95 backdrop-blur border-b px-4 py-3 transform -translate-y-full transition-transform duration-300 ease-out group-hover:translate-y-0 z-40">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <Button variant="ghost" size="sm" onClick={onBack}>
@@ -156,59 +157,65 @@ export default function ReaderView({ book, onBack }: ReaderViewProps) {
             </div>
           </div>
         </header>
+        
+        {/* Hover trigger area */}
+        <div className="absolute top-0 left-0 right-0 h-16 z-30"></div>
+      </div>
 
-      {/* Reader Content */}
-      <div className="flex-1 relative">
-        <div className="max-w-7xl mx-auto p-6">
+      {/* Reader Content - Fixed Height */}
+      <div className="flex-1 flex flex-col overflow-hidden">
+        <div className="flex-1 p-6 overflow-hidden">
           
-          {/* Page Content */}
-          <div className={`grid gap-8 ${
+          {/* Page Content - Fixed Height Container */}
+          <div className={`h-full grid gap-8 ${
             settings.pageLayout === 'spread' && rightPageContent ? 'grid-cols-2' : 'grid-cols-1'
           }`}>
             {/* Left/Single Page */}
-            <Card className="bg-reader-page border-border/50 shadow-lg">
+            <Card className="bg-reader-page border-border/50 shadow-lg flex flex-col h-full">
               <div 
                 ref={pageContentRef}
-                className="p-8 reader-text reader-scroll overflow-y-auto"
+                className="flex-1 p-8 reader-text overflow-y-auto"
                 style={{
                   fontSize: `${settings.fontSize}px`,
                   lineHeight: settings.lineHeight,
                   fontFamily: settings.fontFamily === 'serif' ? 'Georgia, serif' : 'system-ui, sans-serif',
-                  minHeight: '800px'
+                  height: 'calc(100vh - 180px)' // Fixed height minus navigation space
                 }}
                 dangerouslySetInnerHTML={{
                   __html: leftPageContent ? getHighlightedContent(leftPageContent, leftPageNumber) : '<p>Page not found</p>'
                 }}
               />
-              <div className="px-8 pb-4 text-center text-sm text-muted-foreground border-t">
+              <div className="px-8 py-4 text-center text-sm text-muted-foreground border-t bg-card/50">
                 Page {leftPageNumber}
               </div>
             </Card>
 
             {/* Right Page (if spread layout) */}
             {settings.pageLayout === 'spread' && rightPageContent && (
-              <Card className="bg-reader-page border-border/50 shadow-lg">
+              <Card className="bg-reader-page border-border/50 shadow-lg flex flex-col h-full">
                 <div 
-                  className="p-8 reader-text reader-scroll overflow-y-auto"
+                  className="flex-1 p-8 reader-text overflow-y-auto"
                   style={{
                     fontSize: `${settings.fontSize}px`,
                     lineHeight: settings.lineHeight,
                     fontFamily: settings.fontFamily === 'serif' ? 'Georgia, serif' : 'system-ui, sans-serif',
-                    minHeight: '800px'
+                    height: 'calc(100vh - 180px)' // Fixed height minus navigation space
                   }}
                   dangerouslySetInnerHTML={{
                     __html: getHighlightedContent(rightPageContent, rightPageNumber!)
                   }}
                 />
-                <div className="px-8 pb-4 text-center text-sm text-muted-foreground border-t">
+                <div className="px-8 py-4 text-center text-sm text-muted-foreground border-t bg-card/50">
                   Page {rightPageNumber}
                 </div>
               </Card>
             )}
           </div>
+        </div>
 
-          {/* Navigation */}
-          <div className="flex items-center justify-between mt-8">
+        {/* Fixed Navigation at Bottom */}
+        <div className="px-6 py-4 bg-card/80 backdrop-blur border-t">
+          <div className="flex items-center justify-between">
             <Button 
               variant="outline" 
               onClick={prevPage}
@@ -225,7 +232,7 @@ export default function ReaderView({ book, onBack }: ReaderViewProps) {
               </span>
               <div className="w-48 bg-muted rounded-full h-2">
                 <div 
-                  className="bg-primary h-2 rounded-full transition-all"
+                  className="bg-primary h-2 rounded-full transition-all duration-300"
                   style={{ width: `${(currentPage / book.metadata.totalPages) * 100}%` }}
                 />
               </div>
@@ -242,23 +249,23 @@ export default function ReaderView({ book, onBack }: ReaderViewProps) {
             </Button>
           </div>
         </div>
-
-        {/* Annotation Tools Overlay */}
-        {showAnnotationTools && selectedText && (
-          <AnnotationTools
-            selectedText={selectedText}
-            textbookId={book.metadata.id}
-            pageNumber={currentPage}
-            onAnnotate={handleAnnotation}
-            onClose={() => setShowAnnotationTools(false)}
-          />
-        )}
-
-        {/* Focus Mode Overlay */}
-        {focusMode && (
-          <div className="fixed inset-0 bg-focus-overlay z-40" onClick={() => setFocusMode(false)} />
-        )}
       </div>
+
+      {/* Annotation Tools Overlay */}
+      {showAnnotationTools && selectedText && (
+        <AnnotationTools
+          selectedText={selectedText}
+          textbookId={book.metadata.id}
+          pageNumber={currentPage}
+          onAnnotate={handleAnnotation}
+          onClose={() => setShowAnnotationTools(false)}
+        />
+      )}
+
+      {/* Focus Mode Overlay */}
+      {focusMode && (
+        <div className="fixed inset-0 bg-focus-overlay z-40" onClick={() => setFocusMode(false)} />
+      )}
 
       {/* Side Panels */}
       <TableOfContents 
