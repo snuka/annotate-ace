@@ -103,13 +103,13 @@ export default function UnifiedDrawer({
       {/* Background overlay */}
       <div className="fixed inset-0 bg-black/20 z-40" onClick={onClose} />
       
-      {/* Selection highlight styling */}
+      {/* Selection highlight styling - scoped to main content only */}
       <style>{`
-        ::selection {
+        .reader-content ::selection {
           background-color: hsl(var(--highlight-${selectedColor})) !important;
           color: hsl(var(--foreground)) !important;
         }
-        ::-moz-selection {
+        .reader-content ::-moz-selection {
           background-color: hsl(var(--highlight-${selectedColor})) !important;
           color: hsl(var(--foreground)) !important;
         }
