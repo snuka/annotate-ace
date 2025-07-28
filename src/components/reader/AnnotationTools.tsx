@@ -68,8 +68,13 @@ export default function AnnotationTools({
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <Card className="w-full max-w-2xl max-h-[80vh] overflow-auto">
+    <>
+      {/* Background overlay with focus effect */}
+      <div className="fixed inset-0 bg-black/30 z-40" />
+      
+      {/* Annotation drawer */}
+      <div className="fixed inset-0 flex items-center justify-center z-50 p-4 pointer-events-none">
+        <Card className="w-full max-w-md max-h-[70vh] overflow-auto pointer-events-auto animate-scale-in">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-lg">Add Annotation</CardTitle>
           <Button variant="ghost" size="sm" onClick={onClose}>
@@ -77,28 +82,23 @@ export default function AnnotationTools({
           </Button>
         </CardHeader>
         
-        <CardContent className="space-y-6">
-          {/* Selected Text */}
-          <div className="space-y-2">
-            <label className="text-sm font-medium">Selected Text</label>
-            <div className="p-3 bg-muted rounded-lg border">
-              <p className="text-sm italic">"{selectedText}"</p>
-            </div>
-            <div className="flex items-center gap-2 text-xs text-muted-foreground">
-              <Badge variant="outline">Page {pageNumber}</Badge>
-              <span>•</span>
-              <span>{selectedText.length} characters</span>
-            </div>
+        <CardContent className="space-y-4">
+          {/* Page info */}
+          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+            <Badge variant="outline">Page {pageNumber}</Badge>
+            <span>•</span>
+            <span>{selectedText.length} characters selected</span>
           </div>
 
           {/* Annotation Type */}
-          <div className="space-y-3">
+          <div className="space-y-2">
             <label className="text-sm font-medium">Annotation Type</label>
             <div className="flex gap-2">
               <Button
                 variant={mode === 'highlight' ? 'default' : 'outline'}
                 onClick={() => setMode('highlight')}
-                className="flex items-center gap-2"
+                className="flex items-center gap-2 flex-1"
+                size="sm"
               >
                 <HighlighterIcon className="h-4 w-4" />
                 Highlight
@@ -106,7 +106,8 @@ export default function AnnotationTools({
               <Button
                 variant={mode === 'note' ? 'default' : 'outline'}
                 onClick={() => setMode('note')}
-                className="flex items-center gap-2"
+                className="flex items-center gap-2 flex-1"
+                size="sm"
               >
                 <StickyNote className="h-4 w-4" />
                 Note
@@ -115,16 +116,16 @@ export default function AnnotationTools({
           </div>
 
           {/* Color Selection */}
-          <div className="space-y-3">
+          <div className="space-y-2">
             <label className="text-sm font-medium">Highlight Color</label>
-            <div className="flex gap-2">
+            <div className="grid grid-cols-3 gap-1">
               {highlightColors.map(({ color, label, className }) => (
                 <Button
                   key={color}
                   variant={selectedColor === color ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => setSelectedColor(color)}
-                  className="flex items-center gap-2"
+                  className="flex items-center gap-1 justify-start text-xs"
                 >
                   <div className={`w-3 h-3 rounded ${className} border`} />
                   {label}
@@ -141,45 +142,28 @@ export default function AnnotationTools({
                 placeholder="Add your note here..."
                 value={noteText}
                 onChange={(e) => setNoteText(e.target.value)}
-                rows={4}
-                className="resize-none"
+                rows={3}
+                className="resize-none text-sm"
               />
             </div>
           )}
 
-          {/* Preview */}
-          <div className="space-y-2">
-            <label className="text-sm font-medium">Preview</label>
-            <div className="p-3 bg-muted rounded-lg border">
-              <span 
-                className={`highlight highlight-${selectedColor} px-1 py-0.5 rounded`}
-              >
-                {selectedText}
-              </span>
-              {mode === 'note' && noteText && (
-                <div className="mt-2 p-2 bg-background border-l-2 border-primary">
-                  <p className="text-sm">{noteText}</p>
-                </div>
-              )}
-            </div>
-          </div>
-
           {/* Quick Actions */}
-          <div className="flex gap-2 justify-center">
+          <div className="flex gap-1 justify-center">
             {onStudy && (
-              <Button variant="outline" size="sm" onClick={onStudy} className="flex items-center gap-2">
+              <Button variant="outline" size="sm" onClick={onStudy} className="flex items-center gap-1 text-xs">
                 <Brain className="h-3 w-3" />
                 Study
               </Button>
             )}
             {onCreateCitation && (
-              <Button variant="outline" size="sm" onClick={onCreateCitation} className="flex items-center gap-2">
+              <Button variant="outline" size="sm" onClick={onCreateCitation} className="flex items-center gap-1 text-xs">
                 <Quote className="h-3 w-3" />
                 Cite
               </Button>
             )}
             {onCreateFlashcard && (
-              <Button variant="outline" size="sm" onClick={onCreateFlashcard} className="flex items-center gap-2">
+              <Button variant="outline" size="sm" onClick={onCreateFlashcard} className="flex items-center gap-1 text-xs">
                 <Target className="h-3 w-3" />
                 Flashcard
               </Button>
@@ -187,13 +171,15 @@ export default function AnnotationTools({
           </div>
 
           {/* Actions */}
-          <div className="flex gap-2 justify-end">
-            <Button variant="outline" onClick={onClose}>
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={onClose} className="flex-1" size="sm">
               Cancel
             </Button>
             <Button 
               onClick={mode === 'highlight' ? handleHighlight : handleNote}
               disabled={mode === 'note' && !noteText.trim()}
+              className="flex-1"
+              size="sm"
             >
               {mode === 'highlight' ? 'Add Highlight' : 'Add Note'}
             </Button>
@@ -201,5 +187,6 @@ export default function AnnotationTools({
         </CardContent>
       </Card>
     </div>
+    </>
   );
 }
