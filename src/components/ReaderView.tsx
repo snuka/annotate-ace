@@ -144,7 +144,7 @@ export default function ReaderView({ book, onBack }: ReaderViewProps) {
       
       {/* Auto-hiding Header */}
       <div className="group relative">
-        <header className="absolute top-0 left-0 right-0 bg-card/95 backdrop-blur border-b px-4 py-3 transform -translate-y-full transition-transform duration-300 ease-out group-hover:translate-y-0 z-40">
+        <header className="absolute top-0 left-0 right-0 bg-card/95 backdrop-blur-sm border-b px-4 py-3 transform -translate-y-full transition-transform duration-300 ease-out group-hover:translate-y-0 z-40">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <Button variant="ghost" size="sm" onClick={onBack}>
@@ -234,7 +234,7 @@ export default function ReaderView({ book, onBack }: ReaderViewProps) {
           {/* Hover trigger area */}
           <div className="absolute bottom-0 left-0 right-0 h-16 z-30"></div>
           
-          <div className="absolute bottom-0 left-0 right-0 px-4 py-3 bg-card/95 backdrop-blur border-t transform translate-y-full transition-transform duration-300 ease-out group-hover:translate-y-0 z-40">
+          <div className="absolute bottom-0 left-0 right-0 px-4 py-3 bg-card/95 backdrop-blur-sm border-t transform translate-y-full transition-transform duration-300 ease-out group-hover:translate-y-0 z-40">
             <div className="flex items-center justify-between">
               <Button 
                 variant="ghost" 
