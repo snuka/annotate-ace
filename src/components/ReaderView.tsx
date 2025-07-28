@@ -187,15 +187,14 @@ export default function ReaderView({ book, onBack }: ReaderViewProps) {
             settings.pageLayout === 'spread' && rightPageContent ? 'grid-cols-2' : 'grid-cols-1'
           }`}>
             {/* Left/Single Page */}
-            <Card className="bg-reader-page border-border/50 shadow-lg flex flex-col h-full relative">
+            <Card className="bg-reader-page border-border/50 shadow-lg flex flex-col relative" style={{ height: 'calc(100vh - 120px)' }}>
               <div 
                 ref={pageContentRef}
                 className="flex-1 p-8 reader-text overflow-y-auto"
                 style={{
                   fontSize: `${settings.fontSize}px`,
                   lineHeight: settings.lineHeight,
-                  fontFamily: settings.fontFamily === 'serif' ? 'Georgia, serif' : 'system-ui, sans-serif',
-                  height: 'calc(100vh - 180px)' // Fixed height minus navigation space
+                  fontFamily: settings.fontFamily === 'serif' ? 'Georgia, serif' : 'system-ui, sans-serif'
                 }}
                 dangerouslySetInnerHTML={{
                   __html: leftPageContent ? getHighlightedContent(leftPageContent, leftPageNumber) : '<p>Page not found</p>'
@@ -208,14 +207,13 @@ export default function ReaderView({ book, onBack }: ReaderViewProps) {
 
             {/* Right Page (if spread layout) */}
             {settings.pageLayout === 'spread' && rightPageContent && (
-              <Card className="bg-reader-page border-border/50 shadow-lg flex flex-col h-full relative">
+              <Card className="bg-reader-page border-border/50 shadow-lg flex flex-col relative" style={{ height: 'calc(100vh - 120px)' }}>
                 <div 
                   className="flex-1 p-8 reader-text overflow-y-auto"
                   style={{
                     fontSize: `${settings.fontSize}px`,
                     lineHeight: settings.lineHeight,
-                    fontFamily: settings.fontFamily === 'serif' ? 'Georgia, serif' : 'system-ui, sans-serif',
-                    height: 'calc(100vh - 180px)' // Fixed height minus navigation space
+                    fontFamily: settings.fontFamily === 'serif' ? 'Georgia, serif' : 'system-ui, sans-serif'
                   }}
                   dangerouslySetInnerHTML={{
                     __html: getHighlightedContent(rightPageContent, rightPageNumber!)
