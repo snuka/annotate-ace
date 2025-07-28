@@ -116,9 +116,7 @@ export default function UnifiedDrawer({
       `}</style>
       
       {/* Right-side drawer */}
-      <div className={`fixed inset-y-0 right-0 z-50 bg-background border-l shadow-lg animate-slide-in-right ${
-        studyExpanded ? 'w-[520px]' : 'w-96'
-      } transition-all duration-300`}>
+      <div className="fixed inset-y-0 right-0 z-50 w-96 bg-background border-l shadow-lg animate-slide-in-right">
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b">
           <div className="flex items-center gap-2">
