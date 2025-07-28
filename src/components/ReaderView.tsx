@@ -234,10 +234,11 @@ export default function ReaderView({ book, onBack }: ReaderViewProps) {
           {/* Hover trigger area */}
           <div className="absolute bottom-0 left-0 right-0 h-16 z-30"></div>
           
-          <div className="absolute bottom-0 left-0 right-0 px-6 py-4 bg-card/95 backdrop-blur border-t transform translate-y-full transition-transform duration-300 ease-out group-hover:translate-y-0 z-40">
+          <div className="absolute bottom-0 left-0 right-0 px-4 py-3 bg-card/95 backdrop-blur border-t transform translate-y-full transition-transform duration-300 ease-out group-hover:translate-y-0 z-40">
             <div className="flex items-center justify-between">
               <Button 
-                variant="outline" 
+                variant="ghost" 
+                size="sm"
                 onClick={prevPage}
                 disabled={currentPage <= 1}
                 className="flex items-center gap-2"
@@ -246,12 +247,21 @@ export default function ReaderView({ book, onBack }: ReaderViewProps) {
                 Previous
               </Button>
               
-              <div className="text-sm text-muted-foreground">
-                {currentPage}
+              <div className="flex items-center gap-4">
+                <span className="text-sm text-muted-foreground">
+                  {currentPage} of {book.metadata.totalPages}
+                </span>
+                <div className="w-48 bg-muted rounded-full h-2">
+                  <div 
+                    className="bg-primary h-2 rounded-full transition-all duration-300"
+                    style={{ width: `${(currentPage / book.metadata.totalPages) * 100}%` }}
+                  />
+                </div>
               </div>
 
               <Button 
-                variant="outline" 
+                variant="ghost" 
+                size="sm"
                 onClick={nextPage}
                 disabled={currentPage >= book.metadata.totalPages}
                 className="flex items-center gap-2"
