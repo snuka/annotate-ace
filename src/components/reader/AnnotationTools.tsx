@@ -70,7 +70,19 @@ export default function AnnotationTools({
   return (
     <>
       {/* Background overlay with focus effect */}
-      <div className="fixed inset-0 bg-black/30 z-40" />
+      <div className="fixed inset-0 bg-black/20 z-40" />
+      
+      {/* Selected text highlight overlay */}
+      <style>{`
+        ::selection {
+          background-color: hsl(var(--highlight-yellow)) !important;
+          color: hsl(var(--foreground)) !important;
+        }
+        ::-moz-selection {
+          background-color: hsl(var(--highlight-yellow)) !important;
+          color: hsl(var(--foreground)) !important;
+        }
+      `}</style>
       
       {/* Annotation drawer */}
       <div className="fixed inset-0 flex items-center justify-center z-50 p-4 pointer-events-none">

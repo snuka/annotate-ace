@@ -39,7 +39,7 @@
     --reader-heading: 25 25% 8%;
     
     /* Annotation colors */
-    --highlight-yellow: 50 95% 80%;
+    --highlight-yellow: 45 100% 85%;
     --highlight-green: 120 45% 75%;
     --highlight-blue: 200 70% 80%;
     --highlight-pink: 330 60% 85%;
@@ -104,7 +104,7 @@
     --reader-heading: 35 20% 90%;
 
     /* Dark annotation colors */
-    --highlight-yellow: 50 60% 40%;
+    --highlight-yellow: 45 80% 60%;
     --highlight-green: 120 35% 35%;
     --highlight-blue: 200 50% 40%;
     --highlight-pink: 330 40% 45%;
