@@ -183,7 +183,7 @@ export default function ReaderView({ book, onBack }: ReaderViewProps) {
         <div className="flex-1 p-6 overflow-hidden">
           
           {/* Page Content - Fixed Height Container */}
-          <div className={`h-full grid gap-8 ${
+          <div className={`h-full grid gap-3 ${
             settings.pageLayout === 'spread' && rightPageContent ? 'grid-cols-2' : 'grid-cols-1'
           }`}>
             {/* Left/Single Page */}
