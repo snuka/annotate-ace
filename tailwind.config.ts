@@ -61,6 +61,18 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				reader: {
+					page: 'hsl(var(--reader-page))',
+					text: 'hsl(var(--reader-text))',
+					heading: 'hsl(var(--reader-heading))'
+				},
+				highlight: {
+					yellow: 'hsl(var(--highlight-yellow))',
+					green: 'hsl(var(--highlight-green))',
+					blue: 'hsl(var(--highlight-blue))',
+					pink: 'hsl(var(--highlight-pink))',
+					orange: 'hsl(var(--highlight-orange))'
 				}
 			},
 			borderRadius: {
