@@ -2,9 +2,13 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sh
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { ChevronRight, BookOpen, Brain } from 'lucide-react';
 import { Textbook } from '@/types/textbook';
 import { StudyContext } from '@/types/studyAssistant';
+import { useRef, useEffect, useState } from 'react';
+
+import { TruncatedText } from './TruncatedText';
 
 interface TableOfContentsProps {
   book: Textbook;
@@ -78,9 +82,9 @@ export default function TableOfContents({
                       onClick={() => handlePageSelect(chapter.startPage)}
                     >
                       <div className="flex-1">
-                        <h4 className="font-medium text-sm leading-tight">
+                        <TruncatedText text={chapter.title} className="font-medium text-sm leading-tight truncate block">
                           {chapter.title}
-                        </h4>
+                        </TruncatedText>
                         <p className="text-xs text-muted-foreground mt-1">
                           Pages {chapter.startPage} - {chapter.endPage}
                         </p>
@@ -110,8 +114,10 @@ export default function TableOfContents({
                         onClick={() => handlePageSelect(section.startPage)}
                       >
                         <div className="flex-1 flex items-center justify-between">
-                          <span className="text-xs">{section.title}</span>
-                          <Badge variant="outline" className="text-xs ml-2">
+                          <TruncatedText text={section.title} className="text-xs truncate block max-w-[150px]">
+                            {section.title}
+                          </TruncatedText>
+                          <Badge variant="outline" className="text-xs ml-2 flex-shrink-0">
                             p. {section.startPage}
                           </Badge>
                         </div>
