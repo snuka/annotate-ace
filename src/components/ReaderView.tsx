@@ -327,7 +327,7 @@ export default function ReaderView({ book, onBack }: ReaderViewProps) {
       {/* Unified Drawer */}
       <UnifiedDrawer
         isOpen={drawerMode !== null}
-        mode={drawerMode || 'annotation'}
+        isStudyExpanded={studyAssistant.isOpen}
         onClose={() => {
           setDrawerMode(null);
           setSelectedText('');
