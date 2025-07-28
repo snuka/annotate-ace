@@ -98,7 +98,7 @@ export default function TableOfContents({
                         className="p-2 hover:bg-primary/10 group"
                         onClick={() => handleStudyChapter(chapter)}
                       >
-                        <Brain className="h-4 w-4 text-primary/70 group-hover:text-primary group-hover:scale-110 transition-all duration-500 animate-[pulse_3s_ease-in-out_infinite]" />
+                        <Brain className="h-4 w-4 text-primary/70 group-hover:text-primary group-hover:scale-110 transition-all duration-500" />
                       </Button>
                     )}
                   </div>
