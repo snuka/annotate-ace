@@ -21,6 +21,7 @@ import ReaderSettings from './reader/ReaderSettings';
 import AnnotationTools from './reader/AnnotationTools';
 import AnnotationSearch from './reader/AnnotationSearch';
 import { StudyAssistant } from './study-assistant/StudyAssistant';
+import { StudyDropdown } from './reader/StudyDropdown';
 import { useStudyAssistant } from '@/hooks/useStudyAssistant';
 import { ReadingSettings, Annotation } from '@/types/textbook';
 import { StudyContext } from '@/types/studyAssistant';
@@ -191,22 +192,20 @@ export default function ReaderView({ book, onBack }: ReaderViewProps) {
               <Button variant="ghost" size="sm" onClick={() => setShowTOC(true)}>
                 <Menu className="h-4 w-4" />
               </Button>
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                onClick={() => {
-                  const context: StudyContext = {
-                    type: 'page',
-                    content: leftPageContent || '',
-                    textbookId: book.metadata.id,
-                    pageNumber: currentPage,
-                    chapterId: currentChapter?.id
-                  };
+              
+              <StudyDropdown
+                currentPage={currentPage}
+                currentChapter={currentChapter}
+                textbookId={book.metadata.id}
+                pageContent={leftPageContent || ''}
+                onStudyPage={(context) => {
                   studyAssistant.openWithContext(context);
                 }}
-              >
-                <Brain className="h-4 w-4" />
-              </Button>
+                onStudyChapter={(context) => {
+                  studyAssistant.openWithContext(context);
+                }}
+              />
+              
               <Button variant="ghost" size="sm" onClick={() => setShowSettings(true)}>
                 <Settings className="h-4 w-4" />
               </Button>
@@ -336,6 +335,12 @@ export default function ReaderView({ book, onBack }: ReaderViewProps) {
         isOpen={showTOC}
         onClose={() => setShowTOC(false)}
         onPageSelect={goToPage}
+        onStudyChapter={(context) => {
+          studyAssistant.openWithContext(context);
+        }}
+        onStudySection={(context) => {
+          studyAssistant.openWithContext(context);
+        }}
       />
 
       <ReaderSettings
