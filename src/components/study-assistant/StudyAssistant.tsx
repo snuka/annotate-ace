@@ -6,16 +6,20 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useStudyAssistant } from '@/hooks/useStudyAssistant';
+import { StudyAssistantState } from '@/types/studyAssistant';
 import { RelatedResourceCard } from './RelatedResourceCard';
 import { AIExplanationCard } from './AIExplanationCard';
 
 interface StudyAssistantProps {
+  studyAssistant: StudyAssistantState & {
+    close: () => void;
+    clearError: () => void;
+  };
   onNavigateToPage?: (pageNumber: number) => void;
 }
 
-export const StudyAssistant: React.FC<StudyAssistantProps> = ({ onNavigateToPage }) => {
-  const { isOpen, currentContext, relatedResources, aiExplanation, isLoading, error, close } = useStudyAssistant();
+export const StudyAssistant: React.FC<StudyAssistantProps> = ({ studyAssistant, onNavigateToPage }) => {
+  const { isOpen, currentContext, relatedResources, aiExplanation, isLoading, error, close } = studyAssistant;
 
   if (!isOpen) return null;
 

@@ -357,7 +357,7 @@ export default function ReaderView({ book, onBack }: ReaderViewProps) {
       />
 
       {/* Study Assistant */}
-      <StudyAssistant onNavigateToPage={goToPage} />
+      <StudyAssistant studyAssistant={studyAssistant} onNavigateToPage={goToPage} />
     </div>
   );
 }
