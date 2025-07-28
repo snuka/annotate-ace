@@ -69,14 +69,22 @@ export default function ReaderView({ book, onBack }: ReaderViewProps) {
       }
     };
 
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && settings.fullscreen) {
+        setSettings(prev => ({ ...prev, fullscreen: false }));
+      }
+    };
+
     document.addEventListener('mouseup', handleSelection);
     document.addEventListener('keyup', handleSelection);
+    document.addEventListener('keydown', handleKeyDown);
 
     return () => {
       document.removeEventListener('mouseup', handleSelection);
       document.removeEventListener('keyup', handleSelection);
+      document.removeEventListener('keydown', handleKeyDown);
     };
-  }, []);
+  }, [settings.fullscreen]);
 
   const goToPage = (pageNumber: number) => {
     if (pageNumber >= 1 && pageNumber <= book.metadata.totalPages) {
@@ -126,6 +134,19 @@ export default function ReaderView({ book, onBack }: ReaderViewProps) {
     <div className={`min-h-screen bg-reader-page transition-all duration-300 ${
       settings.theme === 'dark' ? 'dark' : settings.theme === 'sepia' ? 'sepia' : ''
     } ${settings.fullscreen ? 'fixed inset-0 z-50' : ''}`}>
+      
+      {/* Fullscreen Exit Button */}
+      {settings.fullscreen && (
+        <Button 
+          variant="ghost" 
+          size="sm"
+          className="fixed top-4 right-4 z-50 bg-card/80 backdrop-blur hover:bg-card"
+          onClick={() => setSettings(prev => ({ ...prev, fullscreen: false }))}
+        >
+          <ArrowLeft className="h-4 w-4 mr-2" />
+          Exit Fullscreen
+        </Button>
+      )}
       
       {/* Header */}
       {!settings.fullscreen && (
