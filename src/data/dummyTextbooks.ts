@@ -1,4 +1,4 @@
-import { Textbook } from '@/types/textbook';
+import { Textbook, ReadingProgress } from '@/types/textbook';
 
 export const dummyTextbooks: Textbook[] = [
   {
@@ -248,6 +248,33 @@ export const dummyTextbooks: Textbook[] = [
   }
 ];
 
+export const dummyReadingProgress: ReadingProgress[] = [
+  {
+    textbookId: 'physics-101',
+    currentPage: 47,
+    totalTimeRead: 245, // 4 hours 5 minutes
+    pagesRead: [1, 2, 46, 47],
+    lastReadAt: new Date('2024-01-20T14:30:00'),
+    completionPercentage: 13.4 // 47/350 pages
+  },
+  {
+    textbookId: 'calc-advanced',
+    currentPage: 85,
+    totalTimeRead: 180, // 3 hours
+    pagesRead: [1, 2, 3, 4, 5, 31, 32, 56, 57, 84, 85],
+    lastReadAt: new Date('2024-01-19T16:45:00'),
+    completionPercentage: 16.6 // 85/512 pages
+  },
+  {
+    textbookId: 'bio-molecular',
+    currentPage: 1,
+    totalTimeRead: 25,
+    pagesRead: [1],
+    lastReadAt: new Date('2024-01-18T10:15:00'),
+    completionPercentage: 0.2 // 1/428 pages
+  }
+];
+
 export const getTextbookById = (id: string): Textbook | undefined => {
   return dummyTextbooks.find(book => book.metadata.id === id);
 };
@@ -263,4 +290,8 @@ export const getChapterByPage = (textbookId: string, pageNumber: number) => {
   return textbook?.chapters.find(
     chapter => pageNumber >= chapter.startPage && pageNumber <= chapter.endPage
   );
+};
+
+export const getReadingProgress = (textbookId: string): ReadingProgress | undefined => {
+  return dummyReadingProgress.find(progress => progress.textbookId === textbookId);
 };

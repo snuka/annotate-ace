@@ -3,8 +3,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { dummyTextbooks } from '@/data/dummyTextbooks';
-import { Search, BookOpen, Filter, Grid, List } from 'lucide-react';
+import { Progress } from '@/components/ui/progress';
+import { dummyTextbooks, getReadingProgress } from '@/data/dummyTextbooks';
+import { Search, BookOpen, Filter, Grid, List, Clock, BookmarkCheck } from 'lucide-react';
 import { Textbook } from '@/types/textbook';
 
 interface LibraryProps {
@@ -96,14 +97,16 @@ export default function Library({ onOpenBook }: LibraryProps) {
             ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4' 
             : 'grid-cols-1'
         }`}>
-          {filteredBooks.map(book => (
-            <Card 
-              key={book.metadata.id} 
-              className={`group cursor-pointer transition-all duration-200 hover:shadow-lg hover:shadow-primary/10 hover:-translate-y-1 ${
-                viewMode === 'list' ? 'flex' : ''
-              }`}
-              onClick={() => onOpenBook(book)}
-            >
+          {filteredBooks.map(book => {
+            const progress = getReadingProgress(book.metadata.id);
+            return (
+              <Card 
+                key={book.metadata.id} 
+                className={`group cursor-pointer transition-all duration-200 hover:shadow-lg hover:shadow-primary/10 hover:-translate-y-1 ${
+                  viewMode === 'list' ? 'flex' : ''
+                }`}
+                onClick={() => onOpenBook(book)}
+              >
               {viewMode === 'grid' ? (
                 <>
                   <div className="relative overflow-hidden rounded-t-lg">
@@ -127,7 +130,7 @@ export default function Library({ onOpenBook }: LibraryProps) {
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="pt-0">
-                    <div className="space-y-2">
+                    <div className="space-y-3">
                       <div className="flex items-center justify-between text-sm">
                         <Badge variant="outline">{book.metadata.subject}</Badge>
                         <span className="text-muted-foreground">{book.metadata.edition}</span>
@@ -135,6 +138,27 @@ export default function Library({ onOpenBook }: LibraryProps) {
                       <p className="text-sm text-muted-foreground line-clamp-2">
                         {book.metadata.description}
                       </p>
+                      {progress && (
+                        <div className="space-y-2">
+                          <div className="flex items-center justify-between text-xs text-muted-foreground">
+                            <div className="flex items-center gap-1">
+                              <BookmarkCheck className="h-3 w-3" />
+                              <span>Page {progress.currentPage}</span>
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <Clock className="h-3 w-3" />
+                              <span>{Math.floor(progress.totalTimeRead / 60)}h {progress.totalTimeRead % 60}m</span>
+                            </div>
+                          </div>
+                          <div className="space-y-1">
+                            <div className="flex justify-between text-xs">
+                              <span className="text-muted-foreground">Progress</span>
+                              <span className="text-muted-foreground">{progress.completionPercentage.toFixed(1)}%</span>
+                            </div>
+                            <Progress value={progress.completionPercentage} className="h-1.5" />
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </CardContent>
                 </>
@@ -164,21 +188,45 @@ export default function Library({ onOpenBook }: LibraryProps) {
                       </div>
                     </CardHeader>
                     <CardContent className="pt-0">
-                      <div className="flex items-center justify-between">
-                        <div className="flex gap-2">
-                          <Badge variant="outline">{book.metadata.subject}</Badge>
-                          <Badge variant="outline">{book.metadata.edition}</Badge>
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between">
+                          <div className="flex gap-2">
+                            <Badge variant="outline">{book.metadata.subject}</Badge>
+                            <Badge variant="outline">{book.metadata.edition}</Badge>
+                          </div>
+                          <p className="text-sm text-muted-foreground max-w-md line-clamp-1">
+                            {book.metadata.description}
+                          </p>
                         </div>
-                        <p className="text-sm text-muted-foreground max-w-md line-clamp-1">
-                          {book.metadata.description}
-                        </p>
+                        {progress && (
+                          <div className="flex items-center gap-6">
+                            <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                              <div className="flex items-center gap-1">
+                                <BookmarkCheck className="h-3 w-3" />
+                                <span>Page {progress.currentPage}</span>
+                              </div>
+                              <div className="flex items-center gap-1">
+                                <Clock className="h-3 w-3" />
+                                <span>{Math.floor(progress.totalTimeRead / 60)}h {progress.totalTimeRead % 60}m</span>
+                              </div>
+                            </div>
+                            <div className="flex-1 max-w-xs space-y-1">
+                              <div className="flex justify-between text-xs">
+                                <span className="text-muted-foreground">Progress</span>
+                                <span className="text-muted-foreground">{progress.completionPercentage.toFixed(1)}%</span>
+                              </div>
+                              <Progress value={progress.completionPercentage} className="h-1.5" />
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </CardContent>
                   </div>
                 </>
               )}
             </Card>
-          ))}
+            );
+          })}
         </div>
 
         {filteredBooks.length === 0 && (
