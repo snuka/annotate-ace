@@ -18,10 +18,10 @@ import { Textbook } from '@/types/textbook';
 import { getPageContent, getChapterByPage } from '@/data/dummyTextbooks';
 import TableOfContents from './reader/TableOfContents';
 import ReaderSettings from './reader/ReaderSettings';
-import AnnotationTools from './reader/AnnotationTools';
 import AnnotationSearch from './reader/AnnotationSearch';
 import { StudyAssistant } from './study-assistant/StudyAssistant';
 import { StudyDropdown } from './reader/StudyDropdown';
+import UnifiedDrawer from './reader/UnifiedDrawer';
 import { useStudyAssistant } from '@/hooks/useStudyAssistant';
 import { ReadingSettings, Annotation } from '@/types/textbook';
 import { StudyContext } from '@/types/studyAssistant';
@@ -36,7 +36,7 @@ export default function ReaderView({ book, onBack }: ReaderViewProps) {
   const [showTOC, setShowTOC] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showAnnotationSearch, setShowAnnotationSearch] = useState(false);
-  const [showAnnotationTools, setShowAnnotationTools] = useState(false);
+  const [drawerMode, setDrawerMode] = useState<'annotation' | 'study' | null>(null);
   const [selectedText, setSelectedText] = useState<string>('');
   const [selectionRange, setSelectionRange] = useState<Range | null>(null);
   const [focusMode, setFocusMode] = useState(false);
@@ -68,11 +68,11 @@ export default function ReaderView({ book, onBack }: ReaderViewProps) {
       if (selection && selection.toString().trim()) {
         setSelectedText(selection.toString().trim());
         setSelectionRange(selection.getRangeAt(0).cloneRange());
-        setShowAnnotationTools(true);
-      } else {
+        setDrawerMode('annotation');
+      } else if (drawerMode === 'annotation') {
         setSelectedText('');
         setSelectionRange(null);
-        setShowAnnotationTools(false);
+        setDrawerMode(null);
       }
     };
 
@@ -130,7 +130,7 @@ export default function ReaderView({ book, onBack }: ReaderViewProps) {
       console.log('Updated annotations array:', updated);
       return updated;
     });
-    setShowAnnotationTools(false);
+    setDrawerMode(null);
     setSelectedText('');
     setSelectionRange(null);
   };
@@ -146,10 +146,18 @@ export default function ReaderView({ book, onBack }: ReaderViewProps) {
         selectedText: selectedText
       };
       studyAssistant.openWithContext(context);
-      setShowAnnotationTools(false);
-      setSelectedText('');
-      setSelectionRange(null);
+      setDrawerMode('study');
     }
+  };
+
+  const handleStudyPage = (context: StudyContext) => {
+    studyAssistant.openWithContext(context);
+    setDrawerMode('study');
+  };
+
+  const handleStudyChapter = (context: StudyContext) => {
+    studyAssistant.openWithContext(context);
+    setDrawerMode('study');
   };
 
   const getHighlightedContent = (content: string, pageNum: number) => {
@@ -207,12 +215,8 @@ export default function ReaderView({ book, onBack }: ReaderViewProps) {
                 currentChapter={currentChapter}
                 textbookId={book.metadata.id}
                 pageContent={leftPageContent || ''}
-                onStudyPage={(context) => {
-                  studyAssistant.openWithContext(context);
-                }}
-                onStudyChapter={(context) => {
-                  studyAssistant.openWithContext(context);
-                }}
+                onStudyPage={handleStudyPage}
+                onStudyChapter={handleStudyChapter}
               />
               
               <Button variant="ghost" size="sm" onClick={() => setShowSettings(true)}>
@@ -320,17 +324,38 @@ export default function ReaderView({ book, onBack }: ReaderViewProps) {
         </div>
       </div>
 
-      {/* Annotation Tools Overlay */}
-      {showAnnotationTools && selectedText && (
-        <AnnotationTools
-          selectedText={selectedText}
-          textbookId={book.metadata.id}
-          pageNumber={currentPage}
-          onAnnotate={handleAnnotation}
-          onStudy={handleStudySelection}
-          onClose={() => setShowAnnotationTools(false)}
-        />
-      )}
+      {/* Unified Drawer */}
+      <UnifiedDrawer
+        isOpen={drawerMode !== null}
+        mode={drawerMode || 'annotation'}
+        onClose={() => {
+          setDrawerMode(null);
+          setSelectedText('');
+          setSelectionRange(null);
+          if (drawerMode === 'study') {
+            studyAssistant.close();
+          }
+        }}
+        selectedText={selectedText}
+        textbookId={book.metadata.id}
+        pageNumber={currentPage}
+        onAnnotate={handleAnnotation}
+        onCreateCitation={() => {
+          console.log('Create citation for:', selectedText);
+        }}
+        onCreateFlashcard={() => {
+          console.log('Create flashcard for:', selectedText);
+        }}
+        onStudy={handleStudySelection}
+        studyAssistant={{
+          ...studyAssistant,
+          close: () => {
+            studyAssistant.close();
+            setDrawerMode(null);
+          }
+        }}
+        onNavigateToPage={goToPage}
+      />
 
       {/* Focus Mode Overlay */}
       {focusMode && (
@@ -344,12 +369,8 @@ export default function ReaderView({ book, onBack }: ReaderViewProps) {
         isOpen={showTOC}
         onClose={() => setShowTOC(false)}
         onPageSelect={goToPage}
-        onStudyChapter={(context) => {
-          studyAssistant.openWithContext(context);
-        }}
-        onStudySection={(context) => {
-          studyAssistant.openWithContext(context);
-        }}
+        onStudyChapter={handleStudyChapter}
+        onStudySection={handleStudyChapter}
       />
 
       <ReaderSettings
@@ -370,8 +391,6 @@ export default function ReaderView({ book, onBack }: ReaderViewProps) {
         }}
       />
 
-      {/* Study Assistant */}
-      <StudyAssistant studyAssistant={studyAssistant} onNavigateToPage={goToPage} />
     </div>
   );
 }
