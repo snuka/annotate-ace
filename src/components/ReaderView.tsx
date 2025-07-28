@@ -187,7 +187,7 @@ export default function ReaderView({ book, onBack }: ReaderViewProps) {
             settings.pageLayout === 'spread' && rightPageContent ? 'grid-cols-2' : 'grid-cols-1'
           }`}>
             {/* Left/Single Page */}
-            <Card className="bg-reader-page border-border/50 shadow-lg flex flex-col h-full">
+            <Card className="bg-reader-page border-border/50 shadow-lg flex flex-col h-full relative">
               <div 
                 ref={pageContentRef}
                 className="flex-1 p-8 reader-text overflow-y-auto"
@@ -201,16 +201,14 @@ export default function ReaderView({ book, onBack }: ReaderViewProps) {
                   __html: leftPageContent ? getHighlightedContent(leftPageContent, leftPageNumber) : '<p>Page not found</p>'
                 }}
               />
-              <div className="relative">
-                <div className="absolute bottom-4 right-4 bg-card/90 backdrop-blur text-sm text-muted-foreground px-2 py-1 rounded shadow-sm">
-                  {leftPageNumber}
-                </div>
+              <div className="absolute bottom-4 right-4 bg-card/90 backdrop-blur text-sm text-muted-foreground px-2 py-1 rounded shadow-sm">
+                {leftPageNumber}
               </div>
             </Card>
 
             {/* Right Page (if spread layout) */}
             {settings.pageLayout === 'spread' && rightPageContent && (
-              <Card className="bg-reader-page border-border/50 shadow-lg flex flex-col h-full">
+              <Card className="bg-reader-page border-border/50 shadow-lg flex flex-col h-full relative">
                 <div 
                   className="flex-1 p-8 reader-text overflow-y-auto"
                   style={{
@@ -223,13 +221,45 @@ export default function ReaderView({ book, onBack }: ReaderViewProps) {
                     __html: getHighlightedContent(rightPageContent, rightPageNumber!)
                   }}
                 />
-                <div className="relative">
-                  <div className="absolute bottom-4 right-4 bg-card/90 backdrop-blur text-sm text-muted-foreground px-2 py-1 rounded shadow-sm">
-                    {rightPageNumber}
-                  </div>
+                <div className="absolute bottom-4 right-4 bg-card/90 backdrop-blur text-sm text-muted-foreground px-2 py-1 rounded shadow-sm">
+                  {rightPageNumber}
                 </div>
               </Card>
             )}
+          </div>
+        </div>
+
+        {/* Auto-hiding Bottom Navigation */}
+        <div className="group relative">
+          {/* Hover trigger area */}
+          <div className="absolute bottom-0 left-0 right-0 h-16 z-30"></div>
+          
+          <div className="absolute bottom-0 left-0 right-0 px-6 py-4 bg-card/95 backdrop-blur border-t transform translate-y-full transition-transform duration-300 ease-out group-hover:translate-y-0 z-40">
+            <div className="flex items-center justify-between">
+              <Button 
+                variant="outline" 
+                onClick={prevPage}
+                disabled={currentPage <= 1}
+                className="flex items-center gap-2"
+              >
+                <ChevronLeft className="h-4 w-4" />
+                Previous
+              </Button>
+              
+              <div className="text-sm text-muted-foreground">
+                {currentPage}
+              </div>
+
+              <Button 
+                variant="outline" 
+                onClick={nextPage}
+                disabled={currentPage >= book.metadata.totalPages}
+                className="flex items-center gap-2"
+              >
+                Next
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
         </div>
       </div>
