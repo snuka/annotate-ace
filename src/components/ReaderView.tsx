@@ -124,7 +124,12 @@ export default function ReaderView({ book, onBack }: ReaderViewProps) {
       createdAt: new Date(),
       updatedAt: new Date()
     };
-    setAnnotations(prev => [...prev, newAnnotation]);
+    console.log('Adding new annotation:', newAnnotation);
+    setAnnotations(prev => {
+      const updated = [...prev, newAnnotation];
+      console.log('Updated annotations array:', updated);
+      return updated;
+    });
     setShowAnnotationTools(false);
     setSelectedText('');
     setSelectionRange(null);
@@ -151,8 +156,12 @@ export default function ReaderView({ book, onBack }: ReaderViewProps) {
     let highlightedContent = content;
     const pageAnnotations = annotations.filter(ann => ann.pageNumber === pageNum && ann.type === 'highlight');
     
+    console.log(`Getting highlights for page ${pageNum}:`, pageAnnotations);
+    console.log('Total annotations:', annotations);
+    
     pageAnnotations.forEach(annotation => {
       const highlightClass = `highlight highlight-${annotation.color}`;
+      console.log(`Applying highlight to text: "${annotation.selectedText}" with class: ${highlightClass}`);
       highlightedContent = highlightedContent.replace(
         annotation.selectedText,
         `<span class="${highlightClass}" data-annotation-id="${annotation.id}">${annotation.selectedText}</span>`
