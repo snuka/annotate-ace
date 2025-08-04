@@ -128,9 +128,18 @@ export default function ReaderView({ book, onBack }: ReaderViewProps) {
       console.log('Updated annotations array:', updated);
       return updated;
     });
-    setDrawerMode(null);
-    setSelectedText('');
-    setSelectionRange(null);
+    
+    // Clear selection immediately to prevent interference
+    if (window.getSelection) {
+      window.getSelection()?.removeAllRanges();
+    }
+    
+    // Clear state after a brief delay to ensure proper rendering
+    setTimeout(() => {
+      setDrawerMode(null);
+      setSelectedText('');
+      setSelectionRange(null);
+    }, 100);
   };
 
   const handleStudySelection = () => {
@@ -159,19 +168,36 @@ export default function ReaderView({ book, onBack }: ReaderViewProps) {
   };
 
   const getHighlightedContent = (content: string, pageNum: number) => {
-    let highlightedContent = content;
     const pageAnnotations = annotations.filter(ann => ann.pageNumber === pageNum && ann.type === 'highlight');
     
     console.log(`Getting highlights for page ${pageNum}:`, pageAnnotations);
     console.log('Total annotations:', annotations);
     
-    pageAnnotations.forEach(annotation => {
+    if (pageAnnotations.length === 0) {
+      return content;
+    }
+    
+    // Sort annotations by length (longest first) to avoid conflicts
+    const sortedAnnotations = [...pageAnnotations].sort((a, b) => b.selectedText.length - a.selectedText.length);
+    
+    let highlightedContent = content;
+    
+    sortedAnnotations.forEach(annotation => {
       const highlightClass = `highlight highlight-${annotation.color}`;
       console.log(`Applying highlight to text: "${annotation.selectedText}" with class: ${highlightClass}`);
-      highlightedContent = highlightedContent.replace(
-        annotation.selectedText,
-        `<span class="${highlightClass}" data-annotation-id="${annotation.id}">${annotation.selectedText}</span>`
-      );
+      
+      // Check if this annotation is already applied
+      if (highlightedContent.includes(`data-annotation-id="${annotation.id}"`)) {
+        return; // Skip if already highlighted
+      }
+      
+      // Use a more robust replacement that handles the first occurrence
+      const escapedText = annotation.selectedText.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const regex = new RegExp(escapedText);
+      
+      highlightedContent = highlightedContent.replace(regex, (match) => {
+        return `<span class="${highlightClass}" data-annotation-id="${annotation.id}">${match}</span>`;
+      });
     });
     
     return highlightedContent;
