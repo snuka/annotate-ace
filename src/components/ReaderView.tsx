@@ -69,11 +69,9 @@ export default function ReaderView({ book, onBack }: ReaderViewProps) {
         setSelectedText(selection.toString().trim());
         setSelectionRange(selection.getRangeAt(0).cloneRange());
         setDrawerMode('annotation');
-      } else if (drawerMode === 'annotation') {
-        setSelectedText('');
-        setSelectionRange(null);
-        setDrawerMode(null);
       }
+      // Don't automatically close annotation drawer when selection is cleared
+      // The drawer should only close via explicit user action or annotation completion
     };
 
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -242,7 +240,7 @@ export default function ReaderView({ book, onBack }: ReaderViewProps) {
             <Card className="bg-reader-page border-border/50 shadow-lg flex flex-col relative" style={{ height: 'calc(100vh - 48px)' }}>
               <div 
                 ref={pageContentRef}
-                className="flex-1 p-8 reader-text overflow-y-auto"
+                className="flex-1 p-8 reader-text reader-content overflow-y-auto"
                 style={{
                   fontSize: `${settings.fontSize}px`,
                   lineHeight: settings.lineHeight,
@@ -261,7 +259,7 @@ export default function ReaderView({ book, onBack }: ReaderViewProps) {
             {settings.pageLayout === 'spread' && rightPageContent && (
               <Card className="bg-reader-page border-border/50 shadow-lg flex flex-col relative" style={{ height: 'calc(100vh - 48px)' }}>
                 <div 
-                  className="flex-1 p-8 reader-text overflow-y-auto"
+                  className="flex-1 p-8 reader-text reader-content overflow-y-auto"
                   style={{
                     fontSize: `${settings.fontSize}px`,
                     lineHeight: settings.lineHeight,
